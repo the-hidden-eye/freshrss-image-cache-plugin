@@ -115,14 +115,18 @@ class ImageCacheExtension extends Minz_Extension {
 		$imgs = $doc->getElementsByTagName('img');
 		foreach ($imgs as $img) {
 			if ($img->hasAttribute('src') && 
-			         (strrpos($img->getAttribute('src'), "https://" ) || (strrpos($img->getAttribute('src'), "http://" ) ) )
+			         ( (strrpos($img->getAttribute('src'), "https://")  !== false ) 
+				  || 
+				  (strrpos($img->getAttribute('src'), "http://" ) !== false ) )
 			       )  {
 				$newSrc = self::getCacheImageUri($img->getAttribute('src'));
 				$img->setAttribute('src', $newSrc);
 			}
 			if ($img->hasAttribute('srcset') && 
-			        (strrpos($img->getAttribute('srcset'), "https://" ) || (strrpos($img->getAttribute('srcset'), "http://" ) ) )
-			) {
+			         ( (strrpos($img->getAttribute('srcset'), "https://")  !== false ) 
+				  || 
+				  (strrpos($img->getAttribute('srcset'), "http://" ) !== false ) )
+			       )  {
 				$newSrcSet = preg_replace_callback('/(?:([^\s,]+)(\s*(?:\s+\d+[wx])(?:,\s*)?))/', 'self::getSrcSetUris', $img->getAttribute('srcset'));
 				$img->setAttribute('srcset', $newSrcSet);
 			}
